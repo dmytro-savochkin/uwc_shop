@@ -1,0 +1,39 @@
+- content_for :title do
+  Product description
+
+
+%hr
+
+
+
+%h2
+  %div
+    = image_tag(@product[:photo])
+    %strong
+      = @product[:name]
+
+
+
+= @product[:availability] ? 'is' : 'is not'
+available
+
+
+%div
+  %strongPrice:
+  = @product[:price]
+  dollars
+
+%div
+  %strongPhotos:
+  - @product[:photos].split(',').each do |photo|
+    = image_tag(photo)
+
+
+
+%div
+  %strongShort description:
+  = @product[:short_description]
+
+%div
+  %strong Full description:
+  = @product[:description]
