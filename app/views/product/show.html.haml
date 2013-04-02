@@ -7,21 +7,23 @@
 
 
 %h2
-  %div
-    = image_tag(@product[:photo])
-    %strong
-      = @product[:name]
+  %div= image_tag(@product[:photo])
+  %strong
+    = @product[:title]
 
-
-
-= @product[:availability] ? 'is' : 'is not'
-available
+%div
+  - if @product.availability?
+    Is available. Order it now!
+  - else
+    Isn't available. Please wait some time.
 
 
 %div
-  %strongPrice:
+  %strong Price:
   = @product[:price]
-  dollars
+  dollars.
+
+
 
 %div
   %strongPhotos:
@@ -31,9 +33,18 @@ available
 
 
 %div
-  %strongShort description:
+  %strong Short Description:
   = @product[:short_description]
 
 %div
   %strong Full description:
   = @product[:description]
+
+
+%hr
+- if @product.comments.empty?
+  No comments yet.
+- else
+  %h3 Comments.
+  - @product.comments.each do |comment|
+    = render 'layouts/show_comment', :comment => comment

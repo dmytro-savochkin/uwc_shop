@@ -1,3 +1,9 @@
 class Product < ActiveRecord::Base
-  attr_accessible :availability, :category_id, :description, :link, :name, :photo, :photos, :price, :short_description
+  attr_accessible :availability, :category_id, :description, :link,
+                  :name, :photo, :photos, :price, :short_description
+
+
+  has_many :comments
+
+
 end

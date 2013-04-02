@@ -1,0 +1,5 @@
+- @menu.each do |faction|
+  %strong= faction[:title]
+  - faction.categories.each do |category|
+    %a{:href => category_link(category[:link]), :title => category[:title]}
+      = category[:title]

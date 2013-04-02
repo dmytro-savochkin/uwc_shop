@@ -1,3 +1,4 @@
 class Group < ActiveRecord::Base
-  attr_accessible :link, :name
+  self.inheritance_column = :_type_disabled
+  attr_accessible :link, :title, :type, :category_link
 end

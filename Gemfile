@@ -5,6 +5,9 @@ gem 'rails', '3.2.8'
 gem 'haml'
 gem 'twitter-bootstrap-rails', :git => "git://github.com/seyhunak/twitter-bootstrap-rails.git", :branch => "static"
 
+gem 'thinking-sphinx'
+
+gem 'engineyard'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

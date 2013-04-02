@@ -1,6 +1,8 @@
 class Category < ActiveRecord::Base
   attr_accessible :code, :name
 
+  belongs_to :faction, :foreign_key => 'faction_id'
+
 
 
   # build the classifiers (groups) tree for left panel in category page
@@ -14,8 +16,6 @@ class Category < ActiveRecord::Base
 
     union_map = build_union_map(criteria, products_map)
 
-    logger.info union_map
-
     products_ids_by_price_and_availability = product_ids_for_price_availability price_availability_criteria
     products_ids_by_all_criteria = products_ids_by_price_and_availability & union_map.values.inject(:&)
 
@@ -24,9 +24,6 @@ class Category < ActiveRecord::Base
         products_map, union_map, products_ids_by_all_criteria,
         products_ids_by_price_and_availability, criteria, price_availability_criteria
     )
-
-
-
 
     [output_tree, products_ids_by_all_criteria]
   end
@@ -133,7 +130,7 @@ class Category < ActiveRecord::Base
             when "non-unique"
               union_map[code] = products_with_values_in_criterion.inject(:&)
             when "specific"
-              union_map[code] = product_ids_for_specific_type_group(code, values).to_a.map(&:to_i)
+              union_map[code] = product_ids_for_specific_type_group(code, values)
             else
               raise "Wrong group type (link). How is it possible?"
           end
@@ -259,7 +256,7 @@ class Category < ActiveRecord::Base
       end
     else
       if group_in_criteria
-        criteria_clone[code].push value
+        criteria_clone[code].push value unless group_type == 'specific'
       else
         criteria_clone[code] = [value]
       end
@@ -283,7 +280,7 @@ class Category < ActiveRecord::Base
     end
 
 
-    {
+    output_hash = {
       :code => code,
       :code_title => @code_to[:title][code],
       :value => value,
@@ -294,6 +291,8 @@ class Category < ActiveRecord::Base
       :available_to_click => (difference_for_group.to_i > 0 or value_selected),
       :value_in_brackets => difference_for_group
     }
+    output_hash[:values_for_specific] = criteria_string[code] if group_type == 'specific'
+    output_hash
   end
 
 
@@ -379,13 +378,9 @@ class Category < ActiveRecord::Base
 
 
   def product_ids_for_specific_type_group(code, values)
-    #TODO : to think how to get rid of that query
-
-    table = 'groups_' + @category_link
-    ActiveRecord::Base.connection.select_all("
-      SELECT product_id FROM #{table} WHERE
-      #{code} > #{values.min} AND #{code} < #{values.max}
-    ")
+    GroupProducts.where('code = ?', code).
+        where('value > ?', values.min).
+        where('value < ?', values.max).select('product_id').map(&:product_id)
   end
 
 

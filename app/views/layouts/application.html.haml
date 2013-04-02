@@ -12,16 +12,30 @@
       .navbar-inner
         .container-fluid
           .row-fluid
+            %span.pull-right
+              = form_tag "/search/", :method => "post" do
+                = text_field_tag 'search', '', :class => 'search'
+                %br
+                = submit_tag("Search")
             %h1
+              UWC Shop.
               = yield :title
+
+
+            = render 'layouts/menu'
+
+
 
 
     .container-fluid
       .row-fluid
-        .span4
-          = yield :menu
+        - if params[:category_link] and controller.class == CategoryController
+          .span3
+            .well
+              = render 'layouts/grouper'
 
-        .span8
+
+        .span9
           .well
             %h4
               - if flash[:success]
@@ -39,4 +53,8 @@
               = yield
 
 
+
+    - if Rails.env.development?
+      %div= debug(params)
+      %pre= session.to_yaml unless session.nil?
 

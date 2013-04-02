@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  product_id: 1
+  group_link: MyText
+  value: 9.99
+
+two:
+  product_id: 1
+  group_link: MyText
+  value: 9.99

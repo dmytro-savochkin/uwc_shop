@@ -1,0 +1,14 @@
+%div
+  %h4
+    = index
+    \-
+    %a{:href => product_link(product), :title => product[:title]}
+      = product[:title]
+  %span
+    %strong price:
+    = product[:price]
+  %span
+    %strong availability:
+    = (product[:availability] == 1) ? 'yes' : 'no'
+  %span
+    = product[:short_description]

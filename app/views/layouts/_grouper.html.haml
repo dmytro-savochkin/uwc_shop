@@ -1,0 +1,32 @@
+We have found
+= @product_ids.length
+products according to your criteria.
+
+%span
+  - category_root = build_checkbox_link('')
+  %a{:href => category_root, :title => "Reset the filters"}
+    Reset all filters.
+
+%hr
+
+- @groups_data.each do |group_name, group_elements|
+  %div
+    %strong
+      = group_elements.first[:code_title]
+
+  - group_elements.each do |group_element|
+    %span
+      - if group_element[:type] == 'specific'
+        = text_field_tag group_element[:code] + '_min', group_element[:values_for_specific].min
+        = text_field_tag group_element[:code] + '_max', group_element[:values_for_specific].max
+
+
+
+      - else
+        = group_value_checkbox(group_element[:available_to_click], group_element[:selected], group_element[:criteria_link])
+        = group_element[:value_title]
+        - unless group_element[:selected]
+          (
+          = group_element[:value_in_brackets]
+          )
+
